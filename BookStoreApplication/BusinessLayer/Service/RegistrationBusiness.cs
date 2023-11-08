@@ -38,5 +38,27 @@ namespace BusinessLayer.Service
                 throw new Exception("Login failed");
             }
         }
+        public async Task<string> ForgotPassword(string email)
+        {
+            try
+            {
+                return await registrationRepo.ForgotPassword(email);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Forgot Password unable to access");
+            }
+        }
+        public async Task<bool> ResetPassword(string email, string password, string confirmPassword)
+        {
+            try
+            {
+                return await registrationRepo.ResetPassword(email, password, confirmPassword);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Forgot Password unable to access");
+            }
+        }
     }
 }

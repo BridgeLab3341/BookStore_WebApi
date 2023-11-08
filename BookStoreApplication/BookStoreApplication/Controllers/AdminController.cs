@@ -4,21 +4,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
+using Microsoft.Extensions.Logging.Abstractions;
+using RepoLayer.Context.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Experimental.System.Messaging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace BookStoreApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegistrationController : ControllerBase
+    public class AdminController : ControllerBase
     {
         private readonly IRegistrationBusiness _regiBusiness;
-        public RegistrationController(IRegistrationBusiness business)
+        public AdminController(IRegistrationBusiness business)
         {
             this._regiBusiness = business;
         }
         [HttpPost]
-        [Route("Registration")]
-        public async Task<IActionResult> Register(RegistrationModel model)
+        [Route("AdminRegistration")]
+        public async Task<IActionResult> AdminRegistration(RegistrationModel model)
         {
             try
             {
@@ -39,7 +45,7 @@ namespace BookStoreApplication.Controllers
         }
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> LoginUser(Login login)
+        public async Task<IActionResult> AdminLogin(Login login)
         {
             try
             {
@@ -58,6 +64,5 @@ namespace BookStoreApplication.Controllers
                 throw new Exception("Login Failed");
             }
         }
-        
     }
 }

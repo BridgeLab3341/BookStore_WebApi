@@ -54,15 +54,17 @@ namespace RepoLayer.Service
             try
             {
                 RegistrationTable registration = new RegistrationTable();
-                registration = await _booksContext.RegistrationTable.FirstOrDefaultAsync(x => x.Email == login.Email);
+                registration = await _booksContext.RegistrationTable.FirstOrDefaultAsync(x => x.Email == login.Email && x.Password == login.Password && x.TypeofRegister == login.TypeOfRegister);
                 var email=login.Email;
+                var typeOfRegister = login.TypeOfRegister;
                 if(registration != null)
                 {
-                    var token=GenerateJwtToken(registration.RegisterId, registration.Email);
+                    var token=GenerateJwtToken(registration.RegisterId, registration.Email,registration.TypeofRegister);
                     LoginData loginData = new LoginData
                     {
                         Token = token,
                         Register = registration,
+                        TypeOfRegister = registration.TypeofRegister,
                     };
                     return loginData;
                 }
@@ -77,7 +79,7 @@ namespace RepoLayer.Service
                 throw new Exception("Login Failed");
             }
         }
-        public string GenerateJwtToken(long id,string email)
+        public string GenerateJwtToken(long id,string email,string typeOfRegister)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["JwtConfig:Secret"]);
@@ -86,15 +88,17 @@ namespace RepoLayer.Service
             {
                 Subject = new ClaimsIdentity(new[]
                 {
+                    
                     new Claim(ClaimTypes.Email, email),
-                    new Claim("RegistrationId", id.ToString())
+                    new Claim("RegistrationId", id.ToString()),
+                    new Claim("TypeofRegister",typeOfRegister.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(60),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDscrption);
             return tokenHandler.WriteToken(token);
-        }
+        }   
         public async Task<string> ForgotPassword(string email)
         {
             try
@@ -102,13 +106,15 @@ namespace RepoLayer.Service
                 var entity = await _booksContext.RegistrationTable.Where(x => x.Email == email).FirstOrDefaultAsync();
                 var useremail = entity.Email;
                 var id = entity.RegisterId;
+                string type = entity.TypeofRegister;
 
                 if (entity != null)
                 {
-                    var token = GenerateJwtToken(id, email);
-                    MsmqModel msmql = new MsmqModel();
-                    msmql.SendData2Queue(token);
-                    return token;
+                    var token = GenerateJwtToken(id, email,type);
+                    //MsmqModel msmql = new MsmqModel();
+                    //msmql.SendData2Queue(token);
+                   // return token;
+                   return token;
                 }
                 else
                 {
@@ -120,20 +126,20 @@ namespace RepoLayer.Service
                 throw ex;
             }
         }
-        public async Task<string> ResetPassword(string email, string password, string confirmPassword)
+        public async Task<bool> ResetPassword(string email, string password, string confirmPassword)
         {
             try
             {
-                var reset = await _booksContext.RegistrationTable.Where(x => x.Email == email).FirstOrDefaultAsync();
-                if (reset != null && password == confirmPassword)
+                if (password == confirmPassword)
                 {
-                    //reset.Password = EncryptPassword(password);
+                    var reset = await _booksContext.RegistrationTable.Where(x => x.Email == email).FirstOrDefaultAsync();
+                    reset.Password=confirmPassword;
                     await _booksContext.SaveChangesAsync();
-                    return reset.Password;
+                    return true;
                 }
                 else
                 {
-                    return null;
+                    return false;
                 }
             }
             catch (Exception ex)
