@@ -39,12 +39,12 @@ namespace BookStoreApplication
             services.AddControllers();
             services.AddScoped<IRegistrationBusiness, RegistrationBusiness>();
             services.AddScoped<IRegistrationRepo, RegistrationRepo>();
+            services.AddScoped<IProductsBusiness, ProductsBusiness>();
+            services.AddScoped<IProductsRepo, ProductsRepo>();
             //JWT Authentication
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(jwt =>
+            
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(jwt =>
             {
                 jwt.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -56,35 +56,68 @@ namespace BookStoreApplication
                 };
             });
             //Swaggers
-            services.AddSwaggerGen(s =>
+            services.AddSwaggerGen();
+            //services.AddSwaggerGen(s =>
+            //{
+            //    s.SwaggerDoc("v1", new OpenApiInfo
+            //    {
+            //        Title = "BookStoreApplication",
+            //        Version = "v1",
+            //        Description = "Description goes here",
+            //    });
+
+            //    s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            //    {
+            //        In = ParameterLocation.Header,
+            //        Description = "Please insert token",
+            //        Name = "Authorization",
+            //        Type = SecuritySchemeType.Http,
+            //        BearerFormat = JwtBearerDefaults.AuthenticationScheme,
+            //        Scheme = "bearer"
+            //    });
+            //    s.AddSecurityRequirement(new OpenApiSecurityRequirement
+            //    {
+            //        {
+            //            new OpenApiSecurityScheme
+            //            {
+            //                Reference=new OpenApiReference
+            //                {
+            //                    Type=ReferenceType.SecurityScheme,
+            //                    Id="Bearer"
+            //                }
+            //            },
+            //              new string[]{}
+            //        }
+            //    });
+            //});
+            services.AddSwaggerGen(c =>
             {
-                s.SwaggerDoc("v1", new OpenApiInfo
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "BookStoreApplication",
+                    Title = "BookStore App",
                     Version = "v1",
-                    Description = "Description goes here",
+                    Description = "API's for BookStore Application",
                 });
-                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                var securitySchema = new OpenApiSecurityScheme
                 {
-                    In = ParameterLocation.Header,
-                    Description = "Please insert token",
+                    Description = "Using the Authorization header with the Bearer scheme.",
                     Name = "Authorization",
+                    In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
-                    BearerFormat = JwtBearerDefaults.AuthenticationScheme,
-                    Scheme = "bearer"
-                });
-                s.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+                    Scheme = "bearer",
+                    Reference = new OpenApiReference
                     {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference=new OpenApiReference
-                            {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
-                            }
-                        },
-                          new string[]{}
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                };
+                c.AddSecurityDefinition("Bearer", securitySchema);
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                {
+                       securitySchema, new[] { "Bearer" }
+
                     }
                 });
             });
@@ -106,7 +139,7 @@ namespace BookStoreApplication
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

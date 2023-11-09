@@ -54,9 +54,15 @@ namespace RepoLayer.Service
             try
             {
                 RegistrationTable registration = new RegistrationTable();
-                registration = await _booksContext.RegistrationTable.FirstOrDefaultAsync(x => x.Email == login.Email && x.Password == login.Password && x.TypeofRegister == login.TypeOfRegister);
+                registration = await _booksContext.RegistrationTable.FirstOrDefaultAsync(x => x.Email == login.Email && x.Password == login.Password && x.TypeofRegister==login.TypeOfRegister);
                 var email=login.Email;
                 var typeOfRegister = login.TypeOfRegister;
+                //var ad = registration.TypeofRegister.Equals("Admin");
+                //var p = registration.RegisterId.Equals(1);
+                //if(ad.Equals(p))
+                //{
+
+                //}
                 if(registration != null)
                 {
                     var token=GenerateJwtToken(registration.RegisterId, registration.Email,registration.TypeofRegister);

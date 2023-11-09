@@ -16,6 +16,8 @@ PhoneNumber varchar(100) NOT NULL,
 Email varchar(100) UNIQUE NOT NULL,
 Password varchar(100) NOT NULL);
 
+Select * from ProductTable;
+Delete from ProductTable where ProductId=1;
 Create Table ProductTable
 (ProductId BigInt Identity(1,1) Primary key,
 BookName Varchar(max),
@@ -63,5 +65,3 @@ ProductId BigInt,
 Foreign key (CustomerDetailId) REFERENCES CustomerDetailsTable(CustomerDetailId),
 Foreign key (ProductId) REFERENCES ProductTable(ProductId)
 );
-
-Create Table LoginData(

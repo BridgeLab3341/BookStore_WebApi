@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RepoLayer.Interface
+namespace BusinessLayer.Inteface
 {
-    public interface IProductsRepo
+    public interface IProductsBusiness
     {
         public Task<ProductTable> AddBooks(ProductModel model);
         public Task<List<ProductTable>> GetAllProducts();
-        public Task<ProductTable> UpdateProducts(UpdateProductsModel model, long productId);
-        public  Task<ProductTable> GetByProductId(long productId);
+        public Task<ProductTable> UpdateProducts(UpdateProductsModel model, long prdouctId);
         public Task<ProductTable> DeleteProducts(long productId);
+        public Task<ProductTable> GetByProductId(long productId);
     }
 }

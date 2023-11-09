@@ -12,6 +12,10 @@ namespace BookStoreApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //Summary
+    //Declaring controller class with constructor.
+    //Providing dependency from business class.
+    //All the Method which are in this class Performs Registration, Login, Forgot and Reset Operations.
     public class CustomerController : ControllerBase
     {
         private readonly IRegistrationBusiness _regiBusiness;
@@ -19,6 +23,9 @@ namespace BookStoreApplication.Controllers
         {
             this._regiBusiness = business;
         }
+        //Summary
+        //We are UnAuthorized this method for Customer Registration.
+        //In this method we are doing Customer Registration.
         [HttpPost]
         [Route("CustomerRegistration")]
         public async Task<IActionResult> CustomerRegistration(RegistrationModel model)
@@ -40,6 +47,9 @@ namespace BookStoreApplication.Controllers
                 throw new Exception("Registration failed");
             }
         }
+        //Summary
+        //We are UnAuthorized this method for Customer Login.
+        //In this method we are doing Customer Login.
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> LoginUser(Login login)
@@ -61,6 +71,11 @@ namespace BookStoreApplication.Controllers
                 throw new Exception("Login Failed");
             }
         }
+        //Summary
+        //We are Authorized this method for Forgot Password Operation and particular Customer can Access.
+        //Declaring  Routing and Route Name
+        //In this method we are doing Customer Forget password Operation with Authorization.
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("ForgetPassword")]
         public async Task<IActionResult> ForgetPass(string email)
@@ -82,6 +97,10 @@ namespace BookStoreApplication.Controllers
                 throw new Exception("Reset Password Failed");
             }
         }
+        //Summary
+        //We are Authorized this method for Reset Password Operation and particular Customer can Access.
+        //Declaring  Routing and Route Name
+        //In this method we are doing Reset password Operation with Authorization.
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("ResetPassword")]
@@ -89,7 +108,7 @@ namespace BookStoreApplication.Controllers
         {
             try
             {
-                var email = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+                var email = User.FindFirst(ClaimTypes.Email).Value.ToString();
                 var result = _regiBusiness.ResetPassword(email, password, confirmPassword);
                 if (result != null)
                 {
@@ -105,6 +124,5 @@ namespace BookStoreApplication.Controllers
                 throw new Exception("Reset Password Failed");
             }
         }
-
     }
 }
