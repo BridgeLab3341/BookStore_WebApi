@@ -7,6 +7,7 @@ using BusinessLayer.Inteface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace BookStoreApplication.Controllers
 {
@@ -19,9 +20,11 @@ namespace BookStoreApplication.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly IRegistrationBusiness _regiBusiness;
-        public CustomerController(IRegistrationBusiness business)
+        private readonly ILogger<CustomerController> _logger;
+        public CustomerController(IRegistrationBusiness business, ILogger<CustomerController> logger)
         {
             this._regiBusiness = business;
+            this._logger = logger;
         }
         //Summary
         //We are UnAuthorized this method for Customer Registration.
@@ -32,19 +35,22 @@ namespace BookStoreApplication.Controllers
         {
             try
             {
+
                 var result = await _regiBusiness.Registration(model);
                 if (result != null)
                 {
-                    return Ok(new { success = true, message = "Registration Successful", data = result });
+                    return Ok(new { success = true, message = "Customer Registration Successful", data = result });
                 }
                 else
                 {
-                    return BadRequest(new { success = false, message = "Registration UnSuccessful" });
+                    return BadRequest(new { success = false, message = "Customer Registration UnSuccessful" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Registration failed");
+                //throw new Exception("Registration failed");
+                _logger.LogError(ex, "Error Found Customer Registration UnSuccessful.");
+                return BadRequest(new { success = false, message = "Customer Registration UnSuccessful" });
             }
         }
         //Summary
@@ -59,16 +65,18 @@ namespace BookStoreApplication.Controllers
                 var result = await _regiBusiness.Login(login);
                 if (result != null)
                 {
-                    return Ok(new { success = true, message = "Login Successful", data = result });
+                    return Ok(new { success = true, message = "Customer Login Successful", data = result });
                 }
                 else
                 {
-                    return BadRequest(new { success = false, message = "Login UnSuccessful" });
+                    return BadRequest(new { success = false, message = "Customer Login UnSuccessful" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Login Failed");
+                //throw new Exception("Registration failed");
+                _logger.LogError(ex, "Error Found Customer Login UnSuccessful.");
+                return BadRequest(new { success = false, message = "Customer Login UnSuccessful" });
             }
         }
         //Summary
@@ -85,16 +93,18 @@ namespace BookStoreApplication.Controllers
                 var result = await _regiBusiness.ForgotPassword(email);
                 if (result != null)
                 {
-                    return Ok(new { success = true, message = "User Data Found Token Sent Successfully", data = result });
+                    return Ok(new { success = true, message = "Customer Data Found Token Sent Successfully", data = result });
                 }
                 else
                 {
-                    return BadRequest(new { success = false, message = "User Data NotFound Token NotSent UnSuccessfully" });
+                    return BadRequest(new { success = false, message = "Customer Data NotFound Token NotSent UnSuccessful" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Reset Password Failed");
+                //throw new Exception("Registration failed");
+                _logger.LogError(ex, "Error Found Token Not Sent, UnSuccessful.");
+                return BadRequest(new { success = false, message = "Token NotSent UnSuccessful" });
             }
         }
         //Summary
@@ -116,12 +126,14 @@ namespace BookStoreApplication.Controllers
                 }
                 else
                 {
-                    return BadRequest(new { success = false, message = "Reset Password UnSuccessfully" });
+                    return BadRequest(new { success = false, message = "Reset Password UnSuccessful" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Reset Password Failed");
+                //throw new Exception("Registration failed");
+                _logger.LogError(ex, "Error Found TReset Password UnSuccessful.");
+                return BadRequest(new { success = false, message = "Reset Password UnSuccessful" });
             }
         }
     }

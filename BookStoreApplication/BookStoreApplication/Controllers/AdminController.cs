@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Experimental.System.Messaging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using RepoLayer.Context;
+using Microsoft.Extensions.Logging;
 
 namespace BookStoreApplication.Controllers
 {
@@ -23,9 +24,11 @@ namespace BookStoreApplication.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IRegistrationBusiness _regiBusiness;
-        public AdminController(IRegistrationBusiness business,dbBooksContext dbBooksContext)
+        private readonly ILogger<AdminController> _logger;
+        public AdminController(IRegistrationBusiness business, ILogger<AdminController> logger)
         {
             this._regiBusiness = business;
+            this._logger = logger;
         }
         //Summary
         //We are Authorized this method for Registration Operation only Default admin can Access.
@@ -54,9 +57,11 @@ namespace BookStoreApplication.Controllers
                 }
                 return BadRequest(new { success = false, message = "Your not Authorized to Register" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Registration failed");
+                //throw new Exception("Registration failed");
+                _logger.LogError(ex, "Error Found Registration UnSuccessful.");
+                return BadRequest(new { success = false, message = "Registration UnSuccessful" });
             }
         }
         //Summary
@@ -72,16 +77,18 @@ namespace BookStoreApplication.Controllers
                 var result = await _regiBusiness.Login(login);
                 if (result != null)
                 {
-                    return Ok(new { success = true, message = "Registration Successful", data = result });
+                    return Ok(new { success = true, message = "Admin Login Successful", data = result });
                 }
                 else
                 {
-                    return BadRequest(new { success = false, message = "Registration UnSuccessful" });
+                    return BadRequest(new { success = false, message = "Admin Login UnSuccessful" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Login Failed");
+                //throw new Exception("Registration failed");
+                _logger.LogError(ex, "Error Found, Admin Login UnSuccessful.");
+                return BadRequest(new { success = false, message = "Admin Login UnSuccessful" });
             }
         }
     }

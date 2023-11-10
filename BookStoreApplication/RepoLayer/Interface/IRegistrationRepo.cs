@@ -11,7 +11,7 @@ namespace RepoLayer.Interface
     {
         public Task<RegistrationTable> Registration(RegistrationModel model);
         public Task<LoginData> Login(Login login);
-        public  Task<string> ForgotPassword(string email);
-        public  Task<bool> ResetPassword(string email, string password, string confirmPassword);
+        public Task<string> ForgotPassword(string email);
+        public Task<bool> ResetPassword(string email, string password, string confirmPassword);
     }
 }

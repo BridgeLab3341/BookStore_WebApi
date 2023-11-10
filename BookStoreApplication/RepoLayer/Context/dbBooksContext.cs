@@ -5,7 +5,7 @@ using RepoLayer.Context.Models;
 
 namespace RepoLayer.Context
 {
-    public partial class dbBooksContext : DbContext 
+    public partial class dbBooksContext : DbContext
     {
         public dbBooksContext()
         {
@@ -86,19 +86,26 @@ namespace RepoLayer.Context
             modelBuilder.Entity<OrderTable>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__OrderTab__C3905BCFFB9B9C53");
+                    .HasName("PK__OrderTab__C3905BCF762CE201");
+
+                entity.Property(e => e.Amount).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.OrderTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CustomerDetail)
                     .WithMany(p => p.OrderTable)
                     .HasForeignKey(d => d.CustomerDetailId)
-                    .HasConstraintName("FK__OrderTabl__Custo__44FF419A");
+                    .HasConstraintName("FK__OrderTabl__Custo__5CD6CB2B");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.OrderTable)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__OrderTabl__Produ__45F365D3");
+                    .HasConstraintName("FK__OrderTabl__Produ__5DCAEF64");
+
+                entity.HasOne(d => d.Register)
+                    .WithMany(p => p.OrderTable)
+                    .HasForeignKey(d => d.RegisterId)
+                    .HasConstraintName("FK__OrderTabl__Regis__5EBF139D");
             });
 
             modelBuilder.Entity<ProductTable>(entity =>

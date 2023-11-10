@@ -14,7 +14,7 @@ namespace BusinessLayer.Service
         private readonly IProductsRepo _productsRepo;
         public ProductsBusiness(IProductsRepo productsRepo)
         {
-           this._productsRepo = productsRepo;
+            this._productsRepo = productsRepo;
         }
         public async Task<ProductTable> AddBooks(ProductModel model)
         {
@@ -22,7 +22,7 @@ namespace BusinessLayer.Service
             {
                 return await _productsRepo.AddBooks(model);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception(" Books Not Added Unsuccessful");
             }
@@ -33,7 +33,7 @@ namespace BusinessLayer.Service
             {
                 return await _productsRepo.GetAllProducts();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception("Retrieved All Products");
             }
@@ -45,7 +45,7 @@ namespace BusinessLayer.Service
             {
                 return await _productsRepo.UpdateProducts(model, productId);
             }
-            catch(Exception) 
+            catch (Exception)
             {
                 throw new Exception("Unable to Updat Product or Books ");
             }
@@ -56,7 +56,7 @@ namespace BusinessLayer.Service
             {
                 return _productsRepo.DeleteProducts(productId);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception("Unable to Delete Product or Book");
             }

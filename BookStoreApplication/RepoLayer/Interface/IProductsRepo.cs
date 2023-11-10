@@ -12,7 +12,7 @@ namespace RepoLayer.Interface
         public Task<ProductTable> AddBooks(ProductModel model);
         public Task<List<ProductTable>> GetAllProducts();
         public Task<ProductTable> UpdateProducts(UpdateProductsModel model, long productId);
-        public  Task<ProductTable> GetByProductId(long productId);
+        public Task<ProductTable> GetByProductId(long productId);
         public Task<ProductTable> DeleteProducts(long productId);
     }
 }

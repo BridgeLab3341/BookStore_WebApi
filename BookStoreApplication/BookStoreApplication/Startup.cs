@@ -41,8 +41,10 @@ namespace BookStoreApplication
             services.AddScoped<IRegistrationRepo, RegistrationRepo>();
             services.AddScoped<IProductsBusiness, ProductsBusiness>();
             services.AddScoped<IProductsRepo, ProductsRepo>();
-            //JWT Authentication
-            
+            services.AddScoped<IOrderBusiness, OrderBusiness>();
+            services.AddScoped<IOrderRepo, OrderRepo>();
+
+            //JWT Authentication 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(jwt =>
             {
@@ -120,6 +122,11 @@ namespace BookStoreApplication
 
                     }
                 });
+            });
+            //loggers
+            services.AddLogging(builder =>
+            {
+                builder.AddConsole(); // Configure logging to write to the console
             });
         }
 

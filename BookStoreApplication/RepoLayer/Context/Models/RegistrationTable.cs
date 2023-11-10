@@ -9,6 +9,7 @@ namespace RepoLayer.Context.Models
         {
             CartTable = new HashSet<CartTable>();
             CustomerDetailsTable = new HashSet<CustomerDetailsTable>();
+            OrderTable = new HashSet<OrderTable>();
             ProductTable = new HashSet<ProductTable>();
         }
 
@@ -22,6 +23,7 @@ namespace RepoLayer.Context.Models
 
         public virtual ICollection<CartTable> CartTable { get; set; }
         public virtual ICollection<CustomerDetailsTable> CustomerDetailsTable { get; set; }
+        public virtual ICollection<OrderTable> OrderTable { get; set; }
         public virtual ICollection<ProductTable> ProductTable { get; set; }
     }
 }

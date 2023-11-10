@@ -42,7 +42,7 @@ namespace RepoLayer.Service
                 await _booksContext.SaveChangesAsync();
                 return table;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception("Products unable to add Product or Book Unsuccessful");
             }
@@ -53,7 +53,7 @@ namespace RepoLayer.Service
             {
                 List<ProductTable> products = new List<ProductTable>();
                 products = await _booksContext.ProductTable.ToListAsync();
-                if(products!=null)
+                if (products != null)
                 {
                     return products;
                 }
@@ -72,7 +72,7 @@ namespace RepoLayer.Service
             try
             {
                 var table = await _booksContext.ProductTable.FirstOrDefaultAsync(x => x.ProductId == productId);
-                if(table!=null)
+                if (table != null)
                 {
                     return table;
                 }
@@ -81,7 +81,7 @@ namespace RepoLayer.Service
                     return null;
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception("Failed");
             }
@@ -90,7 +90,7 @@ namespace RepoLayer.Service
         {
             try
             {
-               var product = await _booksContext.ProductTable.FirstOrDefaultAsync(x=>x.ProductId == productId);
+                var product = await _booksContext.ProductTable.FirstOrDefaultAsync(x => x.ProductId == productId);
                 if (product != null)
                 {
                     product.BookName = model.BookName;
@@ -105,9 +105,9 @@ namespace RepoLayer.Service
                     await _booksContext.SaveChangesAsync();
                     return product;
                 }
-                    return null;
+                return null;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception("Updated Unsuccessfully");
             }
@@ -129,7 +129,7 @@ namespace RepoLayer.Service
                     return null;
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception("Unable to Delete Product or Book");
             }

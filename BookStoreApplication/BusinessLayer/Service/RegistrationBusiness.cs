@@ -33,7 +33,7 @@ namespace BusinessLayer.Service
             {
                 return await registrationRepo.Login(login);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception("Login failed");
             }

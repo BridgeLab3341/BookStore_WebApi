@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,16 +20,17 @@ namespace BookStoreApplication.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductsBusiness _productsBusiness;
-        public ProductController(IProductsBusiness productsBusiness)
+        private readonly ILogger<ProductController> _logger;
+        public ProductController(IProductsBusiness productsBusiness, ILogger<ProductController> logger)
         {
             this._productsBusiness = productsBusiness;
+            this._logger = logger;
         }
         //Summary
         //Authorizeing the method to Add Products or Books without any permission.
         //Declaring  Routing and Route Name
         //In this method We are Adding new Products or Books.
         [Authorize]
-        //[Authorize]
         [HttpPost]
         [Route("AddBooks")]
         public async Task<IActionResult> AddingBooks(ProductModel model)
@@ -37,6 +39,7 @@ namespace BookStoreApplication.Controllers
             {
                 //var Role = "Admin";
                 var admin = (User.FindFirst("TypeofRegister").Value);
+                _logger.LogInformation($"Admin '{admin}' is attempting to add books.");
                 if (admin == "Admin")
                 {
                     var result = await _productsBusiness.AddBooks(model);
@@ -51,9 +54,11 @@ namespace BookStoreApplication.Controllers
                 }
                 return BadRequest(new { success = false, message = "Books not Added UnSuccessful" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Books not Added UnSuccessful");
+                //throw new Exception("Books not Added UnSuccessful");
+                _logger.LogError(ex, "Error Found while adding books.");
+                return BadRequest(new { success = false, message = "Books not Added Unsuccessful" });
             }
         }
         //Summary
@@ -69,6 +74,7 @@ namespace BookStoreApplication.Controllers
                 var result = await _productsBusiness.GetAllProducts();
                 if (result != null)
                 {
+                    _logger.LogInformation($"Admin '{result}' is Fetching all books or Products.");
                     return Ok(new { success = true, message = "Retrieved All Products or Books Successfully", data = result });
                 }
                 else
@@ -76,9 +82,11 @@ namespace BookStoreApplication.Controllers
                     return BadRequest(new { success = false, message = "Unable to Retrieve All Products or Books UnSuccessful" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Unable Retrieve All Products or Books UnSuccessful");
+                //throw new Exception("Unable Retrieve All Products or Books UnSuccessful");
+                _logger.LogError(ex, "Error Found while Fetching books.");
+                return BadRequest(new { success = false, message = "Books not Found Unsuccessful" });
             }
         }
         [HttpPost]
@@ -97,9 +105,12 @@ namespace BookStoreApplication.Controllers
                     return BadRequest(new { success = false, message = "Unable to Retrieve Product or Book UnSuccessful" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Unable Retrieve Product or Book UnSuccessful");
+                //throw new Exception("Unable Retrieve Product or Book UnSuccessful");
+                _logger.LogError(ex, "Error Found while Fetching book by Id.");
+                //return BadRequest(new { success = false, message = "Books not Found Unsuccessful" });
+                return NotFound();
             }
         }
         //Summary
@@ -113,7 +124,7 @@ namespace BookStoreApplication.Controllers
         {
             try
             {
-                var admin =(User.FindFirst("TypeofRegister").Value);
+                var admin = (User.FindFirst("TypeofRegister").Value);
                 if (admin == "Admin")
                 {
                     var result = await _productsBusiness.UpdateProducts(model, productId);
@@ -129,9 +140,11 @@ namespace BookStoreApplication.Controllers
                 return BadRequest(new { success = false, message = "Unable to Update Products or Books UnSuccessful" });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Unable to Update Products or Books UnSuccessful");
+                //throw new Exception("Unable to Update Products or Books UnSuccessful");
+                _logger.LogError(ex, "Error Found while Updating book by Id.");
+                return BadRequest(new { success = false, message = "Unable to Update Products or Books UnSuccessful" });
             }
         }
 
@@ -153,7 +166,7 @@ namespace BookStoreApplication.Controllers
                     var result = await _productsBusiness.DeleteProducts(productId);
                     if (result != null)
                     {
-                        return Ok(new { success = true, message = "Deleted Products or Books Successfully"});
+                        return Ok(new { success = true, message = "Deleted Products or Books Successfully" });
                     }
                     else
                     {
@@ -162,9 +175,11 @@ namespace BookStoreApplication.Controllers
                 }
                 return BadRequest(new { success = false, message = "Unable to Remove Products or Books UnSuccessful" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Unable to Delete Products or Books UnSuccessful");
+                //throw new Exception("Unable to Delete Products or Books UnSuccessful");
+                _logger.LogError(ex, "Error Found while Deleting book by Id.");
+                return BadRequest(new { success = false, message = "Unable to Remove Products or Books UnSuccessful" });
             }
         }
 
