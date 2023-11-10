@@ -10,5 +10,6 @@ namespace RepoLayer.Interface
     public interface IOrderRepo
     {
         public Task<OrderTable> PlaceOrder(OrderModel model, long productId, long registrationId, long customerDetailsId);
+        public Task<List<OrderTable>> GetAllOrders();
     }
 }

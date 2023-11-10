@@ -1,4 +1,5 @@
 ﻿using CommonLayer.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using RepoLayer.Context;
@@ -24,20 +25,17 @@ namespace RepoLayer.Service
         {
             try
             {
-                var result = await _dbBooksContext.OrderTable.FirstOrDefaultAsync(x => x.ProductId == productId);
-                if (result != null)
-                {
-                    result.OrderTime = model.OrderTime;
-                    result.Quantity=result.Quantity-model.Quantity;
-                    result.Amount = model.Quantity * result.Amount;
-                    result.CustomerDetailId=customerDetailsId;
-                    result.ProductId = productId;
-                    result.RegisterId = registrationId;
-                    await _dbBooksContext.OrderTable.AddAsync(result);
-                    _dbBooksContext.SaveChanges();
-                    return result;
-                }
-                return null;
+                OrderTable order = new OrderTable();
+                order.OrderTime = model.OrderTime;
+                order.Quantity = model.Quantity;
+                //order.Amount = model.Quantity * order.Amount;
+                order.CustomerDetailId = customerDetailsId;
+                order.ProductId = productId;
+                order.RegisterId = registrationId;
+                await _dbBooksContext.AddAsync(order);
+                //order.Quantity -=model.Quantity;
+                _dbBooksContext.SaveChanges();
+                return order;
             }
             catch (Exception)
             {

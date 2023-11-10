@@ -39,7 +39,6 @@ namespace BookStoreApplication.Controllers
             {
                 //var Role = "Admin";
                 var admin = (User.FindFirst("TypeofRegister").Value);
-                _logger.LogInformation($"Admin '{admin}' is attempting to add books.");
                 if (admin == "Admin")
                 {
                     var result = await _productsBusiness.AddBooks(model);

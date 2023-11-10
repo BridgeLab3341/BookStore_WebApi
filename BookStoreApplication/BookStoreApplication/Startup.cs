@@ -36,13 +36,14 @@ namespace BookStoreApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<dbBooksContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:BookStoreConnection"]));
-            services.AddControllers();
             services.AddScoped<IRegistrationBusiness, RegistrationBusiness>();
             services.AddScoped<IRegistrationRepo, RegistrationRepo>();
             services.AddScoped<IProductsBusiness, ProductsBusiness>();
             services.AddScoped<IProductsRepo, ProductsRepo>();
             services.AddScoped<IOrderBusiness, OrderBusiness>();
             services.AddScoped<IOrderRepo, OrderRepo>();
+            services.AddScoped<ICustomerDetailsBusiness, CustomerDetailsBusiness>();
+            services.AddScoped<ICustomerDetailsRepo, CustomerDetailsRepo>();
 
             //JWT Authentication 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -128,6 +129,7 @@ namespace BookStoreApplication
             {
                 builder.AddConsole(); // Configure logging to write to the console
             });
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -27,5 +27,16 @@ namespace BusinessLayer.Service
                 throw new Exception("Order failed");
             }
         }
+        public async Task<List<OrderTable>> GetAllOrders()
+        {
+            try
+            {
+                return await _orderRepo.GetAllOrders();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Fetching All Orders Failed");
+            }
+        }
     }
 }

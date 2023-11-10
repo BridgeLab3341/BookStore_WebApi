@@ -20,6 +20,7 @@ PhoneNumber varchar(100) NOT NULL,
 Email varchar(100) UNIQUE NOT NULL,
 Password varchar(100) NOT NULL);
 
+Insert into RegistrationTable values('Admin','Head','Admin','9807686543','admin@gmail.com','Admin@1234');
 
 Delete from ProductTable where ProductId=1;
 

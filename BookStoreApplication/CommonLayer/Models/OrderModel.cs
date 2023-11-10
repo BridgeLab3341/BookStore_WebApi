@@ -8,6 +8,5 @@ namespace CommonLayer.Models
     {
         public DateTime OrderTime { get; set; }
         public int Quantity { get; set; }   
-        public decimal amount { get; set; }
     }
 }
