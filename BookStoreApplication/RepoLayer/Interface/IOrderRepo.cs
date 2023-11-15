@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace RepoLayer.Interface
 {
+    //Implemented Interfaces for OrderRepo 
     public interface IOrderRepo
     {
         public Task<OrderTable> PlaceOrder(OrderModel model, long productId, long registrationId, long customerDetailsId);

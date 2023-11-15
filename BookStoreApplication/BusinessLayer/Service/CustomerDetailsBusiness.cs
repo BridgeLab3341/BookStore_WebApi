@@ -11,6 +11,11 @@ namespace BusinessLayer.Service
 {
     public class CustomerDetailsBusiness:ICustomerDetailsBusiness
     {
+        //Summary
+        //Business layer of three tier architecture
+        //In heriting the Interface of ICustomerDetailsRepo interface class into this class.
+        //Implemented constructor  to declare CustomerDetailsRepo repo layer or class. 
+        //declaring the methods of repo layer 
         private readonly ICustomerDetailsRepo _customerDetailsRepo;
         public CustomerDetailsBusiness(ICustomerDetailsRepo customerDetailsRepo)
         {

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace RepoLayer.Interface
 {
+    //Implemented Interfaces for CustomerDetailsRepo 
     public interface ICustomerDetailsRepo
     {
         public Task<CustomerDetailsTable> AddCustomerDetails(CustomerDetailsModel model, long RegistrationId);

@@ -14,6 +14,10 @@ using System.Threading.Tasks;
 
 namespace RepoLayer.Service
 {
+    //Summary 
+    //ProductRepo class contains Add Product by only admin to the bookstoreApplication
+    //Constructor is Implemented with parameters and Dependencies are added from Configuration and DbBookContext file.
+    //CRUD Operations are Performed in this class for Product Table.
     public class ProductsRepo : IProductsRepo
     {
         private readonly IConfiguration _configuration;
@@ -23,11 +27,13 @@ namespace RepoLayer.Service
             this._configuration = configuration;
             this._booksContext = booksContext;
         }
+        //Summary
+        //AddBooks Method is implemented to add books to the Product Table by Admin.
         public async Task<ProductTable> AddBooks(ProductModel model)
         {
             try
             {
-                ProductTable table = new ProductTable();
+                ProductTable table = new ProductTable(); //Creating the Instance of the ProductTable.
                 table.BookName = model.BookName;
                 table.Author = model.Author;
                 table.Language = model.Language;
@@ -38,8 +44,8 @@ namespace RepoLayer.Service
                 table.Discountprice = model.DiscountPrice;
                 table.Price = model.Price;
                 //table.RegisterId = model.RegisterId;
-                await _booksContext.AddAsync(table);
-                await _booksContext.SaveChangesAsync();
+                await _booksContext.AddAsync(table);      //Adding data into dbcontext to database
+                await _booksContext.SaveChangesAsync();   //save the data after adding to database
                 return table;
             }
             catch (Exception)
@@ -47,15 +53,18 @@ namespace RepoLayer.Service
                 throw new Exception("Products unable to add Product or Book Unsuccessful");
             }
         }
-        public async Task<List<ProductTable>> GetAllProducts()
+        //Summary
+        //GetAll Products method is used to print All the Products present in the database of ProductTable
+        //Printing the Products in console.
+        public async Task<List<ProductTable>> GetAllProducts()  
         {
             try
             {
-                List<ProductTable> products = new List<ProductTable>();
-                products = await _booksContext.ProductTable.ToListAsync();
+                List<ProductTable> products = new List<ProductTable>();  //Listing the Product Table to fetch Products in the table.
+                products = await _booksContext.ProductTable.ToListAsync(); //Fetch the Products from dbcontext and Product Table.
                 if (products != null)
                 {
-                    return products;
+                    return products;   //Returning the Products into console.
                 }
                 else
                 {
@@ -67,14 +76,17 @@ namespace RepoLayer.Service
                 return null;
             }
         }
+        //Summary
+        //Fetching the Products by Id
+        //Printing the Products in console.
         public async Task<ProductTable> GetByProductId(long productId)
         {
             try
             {
-                var table = await _booksContext.ProductTable.FirstOrDefaultAsync(x => x.ProductId == productId);
+                var table = await _booksContext.ProductTable.FirstOrDefaultAsync(x => x.ProductId == productId); //Fetch the Products from dbcontext and Product Table.
                 if (table != null)
                 {
-                    return table;
+                    return table;   //Returning the Products from Product Table.
                 }
                 else
                 {
@@ -86,11 +98,15 @@ namespace RepoLayer.Service
                 throw new Exception("Failed");
             }
         }
+        //Summary
+        //Fetching the Product by Id to Update the Products
+        //Updating the all the details of the Products and 
+        //Returning the updated code in console.
         public async Task<ProductTable> UpdateProducts(UpdateProductsModel model, long productId)
         {
             try
             {
-                var product = await _booksContext.ProductTable.FirstOrDefaultAsync(x => x.ProductId == productId);
+                var product = await _booksContext.ProductTable.FirstOrDefaultAsync(x => x.ProductId == productId); //Fetch the ProductId from dbcontext and Product Table.
                 if (product != null)
                 {
                     product.BookName = model.BookName;
@@ -102,8 +118,8 @@ namespace RepoLayer.Service
                     product.Status = model.Status;
                     product.Discountprice = model.DiscountPrice;
                     product.Price = model.Price;
-                    await _booksContext.SaveChangesAsync();
-                    return product;
+                    await _booksContext.SaveChangesAsync(); //Saving the Updated data in to dbcontext of the table.
+                    return product;    //Return the updated data in console.
                 }
                 return null;
             }
@@ -112,6 +128,10 @@ namespace RepoLayer.Service
                 throw new Exception("Updated Unsuccessfully");
             }
         }
+        //Summary
+        //Fetching the Product by Id to Delete the Products
+        //Deleting the all the details of the Products by Product Id. 
+        //Returning the Deleted Data in console.
         public async Task<ProductTable> DeleteProducts(long productId)
         {
             try
@@ -120,8 +140,8 @@ namespace RepoLayer.Service
                 product = await _booksContext.ProductTable.FirstOrDefaultAsync(x => x.ProductId == productId);
                 if (product != null)
                 {
-                    _booksContext.ProductTable.Remove(product);
-                    await _booksContext.SaveChangesAsync();
+                    _booksContext.ProductTable.Remove(product); //Remove or delete that ProductId and Data inside of that id.
+                    await _booksContext.SaveChangesAsync();  //save changes after delete in the dbcontext and table.
                     return product;
                 }
                 else

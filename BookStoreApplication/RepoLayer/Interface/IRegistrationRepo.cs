@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace RepoLayer.Interface
 {
+    //Implemented Interfaces for Registration Repo
     public interface IRegistrationRepo
     {
         public Task<RegistrationTable> Registration(RegistrationModel model);

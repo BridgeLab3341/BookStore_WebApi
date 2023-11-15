@@ -11,6 +11,12 @@ namespace BookStoreApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //Summary
+    //Declaring controller class with constructor.
+    //Providing dependency from business class.
+    //All the Method which are in this class Performs Add and GetAll Operations.
+    //Authorized for all methods.
+    //Routing is provided for all methods.
     public class OrderController : ControllerBase
     {
         private readonly IOrderBusiness _orderBusiness;
@@ -20,6 +26,12 @@ namespace BookStoreApplication.Controllers
             this._orderBusiness = orderBusiness;
             this._logger = logger;
         }
+        //Summary
+        //In this methods we are Placing the Order using the registration Id ,ProductID and CustomersDetailsId for Customer.
+        //Claiming the Registration Id using the claim method.
+        //Claiming the TypeofRegister to Perform the operation if he/she is only customer.
+        //Implemented Loggers for throwing wrror message.
+        //Implemented Exception handling to throw errors.
         [Authorize]
         [HttpPost]
         [Route("PlaceOrder")]
@@ -45,11 +57,15 @@ namespace BookStoreApplication.Controllers
             }
             catch (Exception ex)
             {
-                //throw new Exception("Registration failed");
                 _logger.LogError(ex, "Error Found Placing Order UnSuccessful.");
                 return BadRequest(new { success = false, message = "Placing Order UnSuccessful" });
             }
         }
+        //Summary
+        //In this methods we are Fetching all Orders Placed by Customer.
+        //Claiming the TypeofRegister to Perform the operation if he/she is only customer.
+        //Implemented Loggers for throwing error message.
+        //Implemented Exception handling to throw errors.
         [Authorize]
         [HttpGet]
         [Route("GetAllOrder")]

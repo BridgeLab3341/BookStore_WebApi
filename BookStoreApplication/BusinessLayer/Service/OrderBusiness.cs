@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Service
 {
+    //Summary
+    //Business layer of three tier architecture
+    //In heriting the Interface of IOrderBusiness interface class into this class.
+    //Implemented constructor  to declare OrderBusiness repo layer or class. 
+    //declaring the methods of repo layer 
     public class OrderBusiness : IOrderBusiness
     {
         private readonly IOrderRepo _orderRepo;

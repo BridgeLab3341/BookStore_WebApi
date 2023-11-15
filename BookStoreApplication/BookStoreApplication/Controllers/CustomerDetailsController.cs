@@ -11,8 +11,16 @@ using System.Threading.Tasks;
 
 namespace BookStoreApplication.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
+    //Summary
+    //Declaring controller class with constructor.
+    //Providing dependency from business class.
+    //All the Method which are in this class Performs Add and GetAll Operations.
+    //Authorized for all methods.
+    //Routing is provided for all methods.
+
     public class CustomerDetailsController : ControllerBase
     {
         
@@ -26,6 +34,12 @@ namespace BookStoreApplication.Controllers
         [Authorize]
         [HttpPost]
         [Route("AddCustomerDetails")]
+        //Summary
+        //In this methods we are adding customerDetails using the registration Id for Customer.
+        //Claiming the Registration Id using the claim method.
+        //Claiming the TypeofRegister to Perform the operation if he/she is only customer.
+        //Implemented Loggers for throwing wrror message.
+        //Implemented Exception handling to throw errors.
         public async Task<IActionResult> AddCustomersDetails(CustomerDetailsModel model)
         {
             try
@@ -55,6 +69,11 @@ namespace BookStoreApplication.Controllers
         [Authorize]
         [HttpGet]
         [Route("GetCustomerDetails")]
+        //Summary
+        //In this methods we are Fetching all customerDetails for Customer.
+        //Claiming the TypeofRegister to Perform the operation if he/she is only customer.
+        //Implemented Loggers for throwing wrror message.
+        //Implemented Exception handling to throw errors.
         public async Task<IActionResult> FetchAllCustomerDetails()
         {
             try

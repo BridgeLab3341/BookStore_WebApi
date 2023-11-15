@@ -37,15 +37,15 @@ namespace RepoLayer.Service
         {
             try
             {
-                RegistrationTable registration = new RegistrationTable();
+                RegistrationTable registration = new RegistrationTable();  //creating instance of Registration Table
                 registration.TypeofRegister = model.TypeOfRegistration;
                 registration.FirstName = model.FirstName;
                 registration.LastName = model.LastName;
                 registration.PhoneNumber = model.PhoneNumber;
                 registration.Email = model.Email;
                 registration.Password = model.Password;
-                await _booksContext.AddAsync(registration);
-                await _booksContext.SaveChangesAsync();
+                await _booksContext.AddAsync(registration);         //Adding data into dbcontext to database
+                await _booksContext.SaveChangesAsync();             //save the data after adding to database
                 if (registration != null)
                 {
                     return registration;
@@ -67,25 +67,19 @@ namespace RepoLayer.Service
             try
             {
                 RegistrationTable registration = new RegistrationTable();
-                registration = await _booksContext.RegistrationTable.FirstOrDefaultAsync(x => x.Email == login.Email && x.Password == login.Password && x.TypeofRegister == login.TypeOfRegister);
+                registration = await _booksContext.RegistrationTable.FirstOrDefaultAsync(x => x.Email == login.Email && x.Password == login.Password && x.TypeofRegister == login.TypeOfRegister); //Finding the Email, Password and Type of Registation from input
                 var email = login.Email;
                 var typeOfRegister = login.TypeOfRegister;
-                //var ad = registration.TypeofRegister.Equals("Admin");
-                //var p = registration.RegisterId.Equals(1);
-                //if(ad.Equals(p))
-                //{
-
-                //}
                 if (registration != null)
                 {
-                    var token = GenerateJwtToken(registration.RegisterId, registration.Email, registration.TypeofRegister);
-                    LoginData loginData = new LoginData
+                    var token = GenerateJwtToken(registration.RegisterId, registration.Email, registration.TypeofRegister); //Generation token according to these fields
+                    LoginData loginData = new LoginData  //Creaing the instance of object to the login data model class 
                     {
                         Token = token,
                         Register = registration,
                         TypeOfRegister = registration.TypeofRegister,
                     };
-                    return loginData;
+                    return loginData;   //Printing or returning the data and token in console.
                 }
                 else
                 {
@@ -106,59 +100,67 @@ namespace RepoLayer.Service
         //Printing the Token on console.
         public string GenerateJwtToken(long id, string email, string typeOfRegister)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["JwtConfig:Secret"]);
+            var tokenHandler = new JwtSecurityTokenHandler(); //Initialize TokenHandler and Get Secret Key
+                                                              //The JwtSecurityTokenHandler is part of the System.IdentityModel.Tokens.Jwt namespace and is used to create and validate JWTs.
+            var key = Encoding.ASCII.GetBytes(_configuration["JwtConfig:Secret"]); //The key is used to sign the JWT to ensure its integrity.
 
-            var tokenDscrption = new SecurityTokenDescriptor
+            var tokenDscrption = new SecurityTokenDescriptor //SecurityTokenDescriptor is used to specify the details of the JWT to be created
             {
-                Subject = new ClaimsIdentity(new[]
+                Subject = new ClaimsIdentity(new[]  //It defines the claims (information about the user) as a collection of ClaimsIdentity.
                 {
                     new Claim(ClaimTypes.Email, email),
                     new Claim("RegistrationId", id.ToString()),
                     new Claim("TypeofRegister",typeOfRegister.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(60),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddMinutes(60),     //It sets the expiration time of the token to 60 minutes from the current UTC time.
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)  //It specifies the signing credentials using the provided secret key and the HMAC SHA-256 signature algorithm.
             };
-            var token = tokenHandler.CreateToken(tokenDscrption);
-            return tokenHandler.WriteToken(token);
+            var token = tokenHandler.CreateToken(tokenDscrption);  //method is used to create a JWT based on the provided token descriptor
+            return tokenHandler.WriteToken(token); //method is used to convert the JWT into its string representation and returns the final JWT
         }
+        //Summary
+        //Implemented forget password method by generating the jwt.
+        //checking the email input given in the database and Generating the token.
         public async Task<string> ForgotPassword(string email)
         {
             try
             {
-                var entity = await _booksContext.RegistrationTable.Where(x => x.Email == email).FirstOrDefaultAsync();
+                var entity = await _booksContext.RegistrationTable.Where(x => x.Email == email).FirstOrDefaultAsync();  //Finding the the input email is present in the database or not.
                 var useremail = entity.Email;
                 var id = entity.RegisterId;
                 string type = entity.TypeofRegister;
 
                 if (entity != null)
                 {
-                    var token = GenerateJwtToken(id, email, type);
+                    var token = GenerateJwtToken(id, email, type);   //printing the token for forget method using the input email
                     //MsmqModel msmql = new MsmqModel();
                     //msmql.SendData2Queue(token);
                     // return token;
-                    return token;
+                    return token;   //printing the token 
                 }
                 else
                 {
                     return null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw new Exception("Token not Generated failed");
             }
         }
+        //Summary
+        //Implemented Reset password using the email and password.
+        //checking the email input given in the database and claiming the email.
+        //confirming the password again two times.
         public async Task<bool> ResetPassword(string email, string password, string confirmPassword)
         {
             try
             {
-                if (password == confirmPassword)
+                if (password == confirmPassword)  //condition to be equal for password and confirm password
                 {
-                    var reset = await _booksContext.RegistrationTable.Where(x => x.Email == email).FirstOrDefaultAsync();
+                    var reset = await _booksContext.RegistrationTable.Where(x => x.Email == email).FirstOrDefaultAsync(); //checking the email given by user
                     reset.Password = confirmPassword;
-                    await _booksContext.SaveChangesAsync();
+                    await _booksContext.SaveChangesAsync(); //save changes and store in the database 
                     return true;
                 }
                 else
@@ -166,9 +168,9 @@ namespace RepoLayer.Service
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw new Exception("Reset Password failed");
             }
         }
     }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace RepoLayer.Interface
 {
+    //Implemented Interfaces for ProductsRepo 
     public interface IProductsRepo
     {
         public Task<ProductTable> AddBooks(ProductModel model);
